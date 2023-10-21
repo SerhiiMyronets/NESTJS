@@ -27,7 +27,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGOOSE_URI),
+    MongooseModule.forRoot(process.env.MONGOOSE_URI!),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
@@ -59,4 +59,3 @@ import { ConfigModule } from '@nestjs/config';
   ],
 })
 export class AppModule {}
-console.log(process.env.MONGOOSE_URI);
