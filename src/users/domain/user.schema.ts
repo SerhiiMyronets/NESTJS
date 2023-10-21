@@ -19,7 +19,7 @@ export class AccountData {
   password: string;
 
   @Prop({ default: new Date() })
-  expirationDate: Date;
+  createdAt: Date;
 }
 
 const AccountDataSchema =
