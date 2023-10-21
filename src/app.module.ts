@@ -23,6 +23,7 @@ import { UserRepository } from './users/infrastructure/repository/user.repositor
 import { UserQueryRepository } from './users/infrastructure/repository/user.query.repository';
 import { User, UserSchema } from './users/domain/user.schema';
 import { ConfigModule } from '@nestjs/config';
+import { TestingController } from './testing/api/testing.controller';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { ConfigModule } from '@nestjs/config';
     PostController,
     CommentController,
     UserController,
+    TestingController,
   ],
   providers: [
     AppService,
