@@ -24,11 +24,15 @@ import { UserQueryRepository } from './users/infrastructure/repository/user.quer
 import { User, UserSchema } from './users/domain/user.schema';
 import { ConfigModule } from '@nestjs/config';
 
+console.log(1);
 console.log(process.env.MONGOOSE_URI);
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGOOSE_URI!),
+    MongooseModule.forRoot(
+      process.env.MONGOOSE_URI ||
+        'mongodb+srv://hardmail88:3846MrN1@cluster0.0goknaf.mongodb.net/social_media?retryWrites=true&w=majority',
+    ),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
