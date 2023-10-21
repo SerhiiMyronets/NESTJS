@@ -1,4 +1,4 @@
-import { Controller, Delete } from '@nestjs/common';
+import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from '../../posts/domain/post.schema';
 import { Model } from 'mongoose';
@@ -16,6 +16,7 @@ export class TestingController {
   ) {}
 
   @Delete('/testing/all-data')
+  @HttpCode(204)
   async deleteAllData() {
     await this.PostModel.deleteMany();
     await this.CommentModel.deleteMany();
