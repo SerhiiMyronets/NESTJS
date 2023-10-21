@@ -27,10 +27,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(
-      //process.env.MONGOOSE_UR ||
-      'mongodb+srv://hardmail88:3846MrN1@cluster0.0goknaf.mongodb.net/social_media?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.MONGOOSE_URL!),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
