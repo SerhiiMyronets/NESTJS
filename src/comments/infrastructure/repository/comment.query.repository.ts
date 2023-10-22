@@ -44,7 +44,10 @@ export class CommentQueryRepository {
         likesInfo: 1,
       },
     )
-      .sort({ [query.sortBy]: sortDirectionList[query.sortDirection], _id: -1 })
+      .sort({
+        [query.sortBy]: sortDirectionList[query.sortDirection],
+        _id: sortDirectionList[query.sortDirection],
+      })
       .skip(query.pageSize * (query.pageNumber - 1))
       .limit(query.pageSize)
       .lean();

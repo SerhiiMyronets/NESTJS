@@ -38,7 +38,7 @@ export class UserQueryRepository {
     )
       .sort({
         [`accountData.${query.sortBy}`]: sortDirectionList[query.sortDirection],
-        _id: -1,
+        _id: sortDirectionList[query.sortDirection],
       })
       .skip(query.pageSize * (query.pageNumber - 1))
       .limit(query.pageSize)
