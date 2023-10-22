@@ -38,9 +38,10 @@ export class UserQueryRepository {
     )
       .sort({
         [`accountData.${query.sortBy}`]: sortDirectionList[query.sortDirection],
+        _id: -1,
       })
       .skip(query.pageSize * (query.pageNumber - 1))
-      .limit(+query.pageSize)
+      .limit(query.pageSize)
       .lean();
     return this._getPaginated(
       foundedUsers,
