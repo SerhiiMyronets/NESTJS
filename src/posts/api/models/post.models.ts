@@ -1,5 +1,5 @@
 import { IsMongoId, MaxLength, Validate } from 'class-validator';
-import { BlogExistValidation } from '../../pipes/blogExistValidation';
+import { BlogExistValidation } from '../../validationPipes/blog.exist.validation';
 import { OmitType } from '@nestjs/swagger';
 
 export class ParamModel {

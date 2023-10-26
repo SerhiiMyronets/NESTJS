@@ -1,6 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from '../application/auth.service';
-import { LoginInputModel, UserInputModel } from './models/auth.models';
+import {
+  ConfirmationCodeModel,
+  LoginInputModel,
+  UserInputModel,
+} from './models/auth.models';
 
 @Controller('auth')
 export class AuthController {
@@ -12,7 +16,14 @@ export class AuthController {
   }
 
   @Post('registration')
+  @HttpCode(204)
   async registerNewUser(@Body() inputModel: UserInputModel) {
     await this.authService.register(inputModel);
+  }
+
+  @Post('registration-confirmation')
+  @HttpCode(204)
+  async confirmUser(@Body() inputModel: ConfirmationCodeModel) {
+    await this.authService.confirmUser(inputModel);
   }
 }

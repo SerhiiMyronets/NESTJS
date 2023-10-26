@@ -6,16 +6,15 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserConfirmation(user: UserDocument, token: string) {
-    const url = `example.com/auth/confirm?token=${token}`;
+  async sendUserConfirmation(user: UserDocument) {
+    const url = `example.com/auth/confirm?token=${user.emailConfirmation.confirmationCode}`;
 
     await this.mailerService.sendMail({
       to: user.accountData.email,
       // from: '"Support Team" <support@example.com>', // override default from
-      subject: 'Welcome to Nice App! Confirm your Email',
-      template: './confirmation', // `.hbs` extension is appended automatically
+      subject: 'Welcome to Social Network! Confirm your Email',
+      template: './confirmation',
       context: {
-        // ✏️ filling curly brackets with content
         name: user.accountData.login,
         url,
       },

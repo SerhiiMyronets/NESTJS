@@ -28,10 +28,11 @@ import { PassportModule } from '@nestjs/passport';
 import { BasicStrategy } from './users/strategy/auth-basic.strategy';
 import { AuthController } from './auth/api/auth.controller';
 import { AuthService } from './auth/application/auth.service';
-import { BlogExistValidation } from './posts/pipes/blogExistValidation';
+import { BlogExistValidation } from './posts/validationPipes/blog.exist.validation';
 import { UserExistValidation } from './users/pipes/UserExistValidation';
 import { MailModule } from './mail/mail.module';
 import { MailService } from './mail/mail.service';
+import { ConfirmationCodeValidation } from './auth/validationPipes/confirmation.code.validation';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { MailService } from './mail/mail.service';
     AuthService,
     BlogExistValidation,
     UserExistValidation,
+    ConfirmationCodeValidation,
     MailService,
   ],
 })

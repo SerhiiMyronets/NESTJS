@@ -28,4 +28,10 @@ export class UserRepository {
       ],
     });
   }
+
+  async getUserByConfirmationCode(code: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({
+      'emailConfirmation.confirmationCode': code,
+    });
+  }
 }

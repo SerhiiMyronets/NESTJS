@@ -1,5 +1,6 @@
-import { IsEmail, Length, Validate } from 'class-validator';
+import { IsEmail, IsUUID, Length, Validate } from 'class-validator';
 import { UserExistValidation } from '../../../users/pipes/UserExistValidation';
+import { ConfirmationCodeValidation } from '../../validationPipes/confirmation.code.validation';
 
 export class UserInputModel {
   @Validate(UserExistValidation)
@@ -10,6 +11,12 @@ export class UserInputModel {
   @Validate(UserExistValidation)
   @IsEmail()
   email: string;
+}
+
+export class ConfirmationCodeModel {
+  @Validate(ConfirmationCodeValidation)
+  @IsUUID()
+  code: string;
 }
 
 export class LoginInputModel {

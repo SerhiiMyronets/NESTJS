@@ -1,24 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '../../users/infrastructure/repository/user.repository';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserModelType } from '../../users/domain/user.schema';
 import { UserService } from '../../users/application/user.service';
-import { UserInputModel } from '../api/models/auth.models';
+import {
+  ConfirmationCodeModel,
+  UserInputModel,
+} from '../api/models/auth.models';
 import * as bcrypt from 'bcrypt';
+import { MailService } from '../../mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     protected userService: UserService,
-    protected userRepository: UserRepository,
-    @InjectModel(User.name) private UserModel: UserModelType,
+    protected mailService: MailService,
   ) {}
 
   async register(inputModel: UserInputModel): Promise<boolean> {
     inputModel.password = await bcrypt.hash(inputModel.password, 10);
-    const newUser = this.UserModel.registerUser(inputModel, this.UserModel);
-    await newUser.save();
-    console.log(newUser);
+    const newUser = await this.userService.createUser(inputModel);
+    this.mailService.sendUserConfirmation(newUser);
     return true;
+  }
+
+  async confirmUser(inputModel: ConfirmationCodeModel) {
+    await this.userService.confirmUser(inputModel.code);
   }
 }

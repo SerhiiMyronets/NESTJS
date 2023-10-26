@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 import { randomUUID } from 'crypto';
-//import add from 'date-fns/add';
+import add from 'date-fns/add';
 import { UserInputModel } from '../api/models/user.model';
 
 export type UserDocument = HydratedDocument<User>;
@@ -31,7 +31,7 @@ export class EmailConfirmation {
   confirmationCode: string;
 
   @Prop({
-    default: new Date(),
+    default: add(new Date(), { hours: 5 }),
   })
   expirationDate: Date;
 
@@ -54,7 +54,11 @@ export class User {
   emailConfirmation: EmailConfirmation;
 
   confirmUser() {
-    this.emailConfirmation.isConfirmed = true;
+    if (
+      !this.emailConfirmation.isConfirmed &&
+      this.emailConfirmation.expirationDate > new Date()
+    )
+      this.emailConfirmation.isConfirmed = true;
   }
 
   static createConfirmedUser(
