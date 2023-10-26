@@ -10,7 +10,7 @@ export class UserInputModel {
   @Validate(UserExistValidation)
   @Length(3, 10)
   login: string;
-  @Length(8, 20)
+  @Length(6, 20)
   password: string;
   @Validate(UserExistValidation)
   @IsEmail()
