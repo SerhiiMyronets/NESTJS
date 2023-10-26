@@ -13,11 +13,12 @@ import {
 import { PostService } from '../application/post.service';
 import { PostQueryRepository } from '../infrastrusture/repository/post.query.repository';
 import {
-  PostDTOModel,
-  PostFullInputModel,
+  BlogIdParamModel,
+  ParamModel,
   PostByBlogInputModel,
+  PostDTOModel,
+  PostInputModel,
   PostInputQueryModel,
-  UpdatePostInputModel,
 } from './models/post.models';
 import { BlogQueryRepository } from '../../blogs/infrastructure/repository/blog.query.repository';
 
@@ -30,8 +31,8 @@ export class PostController {
   ) {}
 
   @Get('/posts/:id')
-  async getPost(@Param('id') id: string) {
-    const post = await this.postQueryRepository.getPost(id);
+  async getPost(@Param() params: ParamModel) {
+    const post = await this.postQueryRepository.getPost(params.id);
     if (!post) throw new NotFoundException();
     return post;
   }
@@ -43,16 +44,16 @@ export class PostController {
 
   @Get('blogs/:id/posts')
   async getPostsByBlog(
-    @Param('id') id: string,
+    @Param() params: ParamModel,
     @Query() query: PostInputQueryModel,
   ) {
-    const blog = await this.blogQueryRepository.getBlog(id);
+    const blog = await this.blogQueryRepository.getBlog(params.id);
     if (!blog) throw new NotFoundException();
     return await this.postQueryRepository.getPosts(query, blog.id);
   }
 
   @Post('posts')
-  async createPost(@Body() inputModel: PostFullInputModel) {
+  async createPost(@Body() inputModel: PostInputModel) {
     const newPostDTO = await this._createPostDTO(inputModel);
     const postId = await this.postService.create(newPostDTO);
     return this.postQueryRepository.getPost(postId);
@@ -60,11 +61,12 @@ export class PostController {
 
   @Post('blogs/:id/posts')
   async createPostByBlog(
-    @Param('id') id: string,
+    @Param() params: BlogIdParamModel,
     @Body() inputBody: PostByBlogInputModel,
   ) {
-    const fullInputModel = new PostFullInputModel(inputBody, id);
+    const fullInputModel = { ...inputBody, blogId: params.id };
     const newPostDTO = await this._createPostDTO(fullInputModel);
+
     const postId = await this.postService.create(newPostDTO);
     return this.postQueryRepository.getPost(postId);
   }
@@ -72,23 +74,22 @@ export class PostController {
   @Put('posts/:id')
   @HttpCode(204)
   async updatePost(
-    @Param('id') id: string,
-    @Body() inputModel: UpdatePostInputModel,
+    @Param() params: ParamModel,
+    @Body() inputModel: PostDTOModel,
   ) {
     const newPostDTO = await this._createPostDTO(inputModel);
-    const result = await this.postService.update(id, newPostDTO);
+    const result = await this.postService.update(params.id, newPostDTO);
     if (!result) throw new NotFoundException();
   }
 
   @Delete('posts/:id')
   @HttpCode(204)
-  async deletePost(@Param('id') id: string) {
-    const result = await this.postService.delete(id);
+  async deletePost(@Param() params: ParamModel) {
+    const result = await this.postService.delete(params.id);
     if (!result) throw new NotFoundException();
   }
-  async _createPostDTO(inputModel: PostFullInputModel): Promise<PostDTOModel> {
+  async _createPostDTO(inputModel: PostInputModel): Promise<PostDTOModel> {
     const blog = await this.blogQueryRepository.getBlog(inputModel.blogId);
-    if (!blog) throw new NotFoundException();
-    return new PostDTOModel(inputModel, blog.name);
+    return { ...inputModel, blogName: blog!.name };
   }
 }

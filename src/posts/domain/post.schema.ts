@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { UpdatePostInputModel } from '../api/models/post.models';
+import { PostDTOModel } from '../api/models/post.models';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -62,7 +62,7 @@ export class Post {
   })
   extendedLikesInfo: ExtendedLikesInfo;
 
-  updatePost(updateDTO: UpdatePostInputModel) {
+  updatePost(updateDTO: PostDTOModel) {
     this.title = updateDTO.title;
     this.shortDescription = updateDTO.shortDescription;
     this.content = updateDTO.content;

@@ -1,41 +1,39 @@
-export class PostByBlogInputModel {
+import { IsMongoId, MaxLength, Validate } from 'class-validator';
+import { BlogExistValidation } from '../../pipes/blogExistValidation';
+import { OmitType } from '@nestjs/swagger';
+
+export class ParamModel {
+  @IsMongoId()
+  id: string;
+}
+
+export class BlogIdParamModel {
+  @Validate(BlogExistValidation)
+  @IsMongoId()
+  id: string;
+}
+
+export class PostDTOModel {
+  @MaxLength(30)
   title: string;
+  @MaxLength(100)
   shortDescription: string;
+  @MaxLength(1000)
   content: string;
-}
-
-export class PostFullInputModel extends PostByBlogInputModel {
+  @Validate(BlogExistValidation)
+  @IsMongoId()
   blogId: string;
-
-  constructor(mod: PostByBlogInputModel, blogId: string) {
-    super();
-    this.blogId = blogId;
-
-    for (const [key, value] of Object.entries(mod)) {
-      this[key] = value;
-    }
-  }
-}
-
-export class PostDTOModel extends PostFullInputModel {
-  blogName: string;
-  constructor(mod: PostFullInputModel, blogName: string) {
-    super(mod, mod.blogId);
-    this.blogName = blogName;
-
-    for (const [key, value] of Object.entries(mod)) {
-      this[key] = value;
-    }
-  }
-}
-
-export class UpdatePostInputModel {
-  title: string;
-  shortDescription: string;
-  content: string;
-  blogId: string;
+  @MaxLength(15)
   blogName: string;
 }
+
+export class PostInputModel extends OmitType(PostDTOModel, [
+  'blogName',
+] as const) {}
+
+export class PostByBlogInputModel extends OmitType(PostInputModel, [
+  'blogId',
+] as const) {}
 
 export type PostInputQueryModel = {
   pageNumber: number;

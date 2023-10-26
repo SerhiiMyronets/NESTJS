@@ -24,10 +24,18 @@ import { UserQueryRepository } from './users/infrastructure/repository/user.quer
 import { User, UserSchema } from './users/domain/user.schema';
 import { ConfigModule } from '@nestjs/config';
 import { TestingController } from './testing/api/testing.controller';
+import { PassportModule } from '@nestjs/passport';
+import { BasicStrategy } from './users/strategy/auth-basic.strategy';
+import { AuthController } from './auth/api/auth.controller';
+import { AuthService } from './auth/application/auth.service';
+import { BlogExistValidation } from './posts/pipes/blogExistValidation';
+import { UserExistValidation } from './users/pipes/UserExistValidation';
+import { MailModule } from './mail/mail.module';
+import { MailService } from './mail/mail.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGOOSE_URI!),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
@@ -35,6 +43,8 @@ import { TestingController } from './testing/api/testing.controller';
       { name: Comment.name, schema: CommentSchema },
       { name: User.name, schema: UserSchema },
     ]),
+    PassportModule,
+    MailModule,
   ],
   controllers: [
     AppController,
@@ -43,6 +53,7 @@ import { TestingController } from './testing/api/testing.controller';
     CommentController,
     UserController,
     TestingController,
+    AuthController,
   ],
   providers: [
     AppService,
@@ -58,6 +69,11 @@ import { TestingController } from './testing/api/testing.controller';
     UserService,
     UserRepository,
     UserQueryRepository,
+    BasicStrategy,
+    AuthService,
+    BlogExistValidation,
+    UserExistValidation,
+    MailService,
   ],
 })
 export class AppModule {}

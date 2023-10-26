@@ -8,7 +8,7 @@ import {
 import { PostQueryRepository } from '../../posts/infrastrusture/repository/post.query.repository';
 import { CommentService } from '../application/comment.service';
 import { CommentQueryRepository } from '../infrastructure/repository/comment.query.repository';
-import { CommentInputQueryModel } from './models/comment.models';
+import { CommentInputQueryModel, ParamModel } from './models/comment.models';
 
 @Controller()
 export class CommentController {
@@ -19,18 +19,18 @@ export class CommentController {
   ) {}
 
   @Get('/comments/:id')
-  async getComment(@Param('id') id: string) {
-    const comment = await this.commentsQueryRepository.getComment(id);
+  async getComment(@Param() params: ParamModel) {
+    const comment = await this.commentsQueryRepository.getComment(params.id);
     if (!comment) throw new NotFoundException();
     return comment;
   }
 
   @Get('posts/:id/comments')
   async getCommentsByPost(
-    @Param('id') id: string,
+    @Param() params: ParamModel,
     @Query() query: CommentInputQueryModel,
   ) {
-    const post = await this.postQueryRepository.getPost(id);
+    const post = await this.postQueryRepository.getPost(params.id);
     if (!post) throw new NotFoundException();
     return await this.commentsQueryRepository.getComments(query, post.id);
   }

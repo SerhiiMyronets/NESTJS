@@ -1,8 +1,19 @@
-export type newBlogInputModel = {
+import { IsEmail, IsMongoId, Length } from 'class-validator';
+
+export class ParamModel {
+  @IsMongoId()
+  id: string;
+}
+
+export class BlogInputModel {
+  @Length(1, 15)
   name: string;
+  @Length(1, 500)
   description: string;
+  @Length(5, 100)
+  @IsEmail()
   websiteUrl: string;
-};
+}
 
 export type updateBlogInputModel = {
   name: string;

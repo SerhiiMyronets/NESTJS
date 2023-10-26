@@ -14,7 +14,18 @@ export class UserRepository {
     await user.deleteOne();
   }
 
-  async find(id: string) {
+  async find(id: string): Promise<UserDocument | null> {
     return this.UserModel.findById(id);
+  }
+
+  async findUserByLoginOrEmail(
+    loginOrEmail: string,
+  ): Promise<UserDocument | null> {
+    return this.UserModel.findOne({
+      $or: [
+        { 'accountData.login': loginOrEmail },
+        { 'accountData.email': loginOrEmail },
+      ],
+    });
   }
 }

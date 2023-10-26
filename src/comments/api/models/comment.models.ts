@@ -1,6 +1,13 @@
+import { IsMongoId } from 'class-validator';
+
 export type CommentInputModel = {
   content: string;
 };
+
+export class ParamModel {
+  @IsMongoId()
+  id: string;
+}
 
 export type CommentViewModel = {
   id: string;

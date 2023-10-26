@@ -13,8 +13,9 @@ import {
 import { BlogService } from '../application/blog.service';
 import { BlogQueryRepository } from '../infrastructure/repository/blog.query.repository';
 import {
+  BlogInputModel,
   BlogInputQueryModel,
-  newBlogInputModel,
+  ParamModel,
   updateBlogInputModel,
 } from './models/blog.models';
 
@@ -30,14 +31,14 @@ export class BlogController {
   }
 
   @Get('blogs/:id')
-  async getBlog(@Param('id') id: string) {
-    const blog = await this.blogQueryRepository.getBlog(id);
+  async getBlog(@Param() params: ParamModel) {
+    const blog = await this.blogQueryRepository.getBlog(params.id);
     if (!blog) throw new NotFoundException();
     return blog;
   }
 
   @Post('blogs')
-  async createBlog(@Body() inputModel: newBlogInputModel) {
+  async createBlog(@Body() inputModel: BlogInputModel) {
     const blogId = await this.blogService.create(inputModel);
     return this.blogQueryRepository.getBlog(blogId);
   }
@@ -45,39 +46,17 @@ export class BlogController {
   @Put('blogs/:id')
   @HttpCode(204)
   async updateBlog(
-    @Param('id') id: string,
+    @Param() params: ParamModel,
     @Body() inputModel: updateBlogInputModel,
   ) {
-    const result = await this.blogService.update(id, inputModel);
+    const result = await this.blogService.update(params.id, inputModel);
     if (!result) throw new NotFoundException();
   }
 
   @Delete('blogs/:id')
   @HttpCode(204)
-  async deleteBlog(@Param('id') id: string) {
-    const result = await this.blogService.delete(id);
+  async deleteBlog(@Param() params: ParamModel) {
+    const result = await this.blogService.delete(params.id);
     if (!result) throw new NotFoundException();
   }
 }
-
-// export class Model {
-//   @IsString()
-//   name: string;
-//
-//   @IsEmail()
-//   email: string;
-// }
-//
-// export class ModelWithId extends Model {
-//   @IsUUID()
-//   id: string;
-//
-//   constructor(id: string, mod: Model) {
-//     super();
-//     this.id = id;
-//
-//     for (const [key, value] of Object.entries(mod)) {
-//       this[key] = value;
-//     }
-//   }
-// }

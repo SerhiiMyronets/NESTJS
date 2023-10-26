@@ -65,6 +65,13 @@ export class User {
     user.emailConfirmation.isConfirmed = true;
     return user;
   }
+
+  static registerUser(
+    inputModel: UserInputModel,
+    UserModel: UserModelType,
+  ): UserDocument {
+    return new UserModel({ accountData: inputModel });
+  }
 }
 export const UserSchema = SchemaFactory.createForClass(User);
 
@@ -74,10 +81,15 @@ UserSchema.methods = {
 
 UserSchema.statics = {
   createConfirmedUser: User.createConfirmedUser,
+  registerUser: User.registerUser,
 } as UserModelStaticType;
 
 export type UserModelStaticType = {
   createConfirmedUser: (
+    inputModel: UserInputModel,
+    UserModel: UserModelType,
+  ) => UserDocument;
+  registerUser: (
     inputModel: UserInputModel,
     UserModel: UserModelType,
   ) => UserDocument;

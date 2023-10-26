@@ -8,28 +8,30 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from '../application/user.service';
 import { UserQueryRepository } from '../infrastructure/repository/user.query.repository';
 import { UserInputModel, UserInputQueryModel } from './models/user.model';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller()
+@Controller('users')
+@UseGuards(AuthGuard('basic'))
 export class UserController {
   constructor(
     protected userService: UserService,
     protected userQueryRepository: UserQueryRepository,
   ) {}
-  @Get('users')
+  @Get()
   async getUsers(@Query() query: UserInputQueryModel) {
     return await this.userQueryRepository.getUsers(query);
   }
-
-  @Post('users')
+  @Post()
   async createUser(@Body() inputModel: UserInputModel) {
-    const userId = await this.userService.createConfirmedUserUser(inputModel);
+    const userId = await this.userService.createConfirmedUser(inputModel);
     return this.userQueryRepository.getUser(userId);
   }
-  @Delete('users/:id')
+  @Delete('/:id')
   @HttpCode(204)
   async deleteUser(@Param('id') id: string) {
     const result = await this.userService.deleteUser(id);

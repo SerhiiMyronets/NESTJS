@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from '../domain/blog.schema';
 import { Model } from 'mongoose';
 import {
-  newBlogInputModel,
+  BlogInputModel,
   updateBlogInputModel,
 } from '../api/models/blog.models';
 
@@ -15,7 +15,7 @@ export class BlogService {
     @InjectModel(Blog.name) private BlogModel: Model<BlogDocument>,
   ) {}
 
-  async create(createCatDto: newBlogInputModel): Promise<string> {
+  async create(createCatDto: BlogInputModel): Promise<string> {
     const newBlog = new this.BlogModel(createCatDto);
     await this.blogRepository.save(newBlog);
     return newBlog.id;

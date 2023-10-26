@@ -12,7 +12,7 @@ export class UserService {
     @InjectModel(User.name) private UserModel: UserModelType,
   ) {}
 
-  async createConfirmedUserUser(inputModel: UserInputModel) {
+  async createConfirmedUser(inputModel: UserInputModel) {
     inputModel.password = await bcrypt.hash(inputModel.password, 10);
     const user = this.UserModel.createConfirmedUser(inputModel, this.UserModel);
     await this.userRepository.save(user);
