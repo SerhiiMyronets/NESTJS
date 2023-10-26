@@ -1,4 +1,4 @@
-import { IsEmail, IsMongoId, Length } from 'class-validator';
+import { IsMongoId, IsUrl, Length } from 'class-validator';
 
 export class ParamModel {
   @IsMongoId()
@@ -11,7 +11,7 @@ export class BlogInputModel {
   @Length(1, 500)
   description: string;
   @Length(5, 100)
-  @IsEmail()
+  @IsUrl()
   websiteUrl: string;
 }
 
